@@ -36,13 +36,14 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        
+
         $user = User::where('email', $request->email)->first();
        
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ValidationException::withMessages(['email' => ['Invalid credentials']]);
         }
 
+        $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -53,7 +54,7 @@ class AuthController extends Controller
     } 
 
     public function logout(Request $request) {
-        $request->user()->tokens()->delete();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Success logout'
