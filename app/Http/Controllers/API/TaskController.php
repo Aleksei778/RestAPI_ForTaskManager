@@ -14,7 +14,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'sometimes|in_progress,completed',
+            'status' => 'sometimes|opened,closed,processed',
         ]);
 
         $task = auth()->user()->tasks()->create($request->all());
@@ -47,7 +47,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'sometimes|in_progress,completed',
+            'status' => 'sometimes|opened,closed,processed',
         ]);
         
         $task->update($request->all());
