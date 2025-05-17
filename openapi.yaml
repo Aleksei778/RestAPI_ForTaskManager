@@ -37,7 +37,7 @@ components:
           example: Complete Laravel tasks
         status:
           type: string
-          example: in_progress
+          example: processed
     Error:
       type: object
       properties:
@@ -242,7 +242,7 @@ paths:
           in: query
           schema:
             type: string
-            example: in_progress
+            example: process
       responses:
         '200':
           description: List of tasks
@@ -278,7 +278,7 @@ paths:
                   example: Complete tasks
                 status:
                   type: string
-                  example: in_progress
+                  example: processed
               required:
                 - title
       responses:
