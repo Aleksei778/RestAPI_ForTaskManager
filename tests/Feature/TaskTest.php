@@ -85,5 +85,31 @@ class TaskTest extends TestCase
             ->assertJsonCount(3, 'data');
     }
 
-    
+    public function test_user_can_get_tasks_filtered_by_status(): void
+    {
+        Task::create([
+            'user_id' => $this->user->id,
+            'title' => 'Opened Task',
+            'status' => 'opened',
+        ]);
+        
+        Task::create([
+            'user_id' => $this->user->id,
+            'title' => 'Closed Task',
+            'status' => 'closed',
+        ]);
+        
+        Task::create([
+            'user_id' => $this->user->id,
+            'title' => 'Processed Task',
+            'status' => 'processed',
+        ]);
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+                         ->getJson('/api/tasks?status=closed');
+
+        $response->assertStatus(200)
+                 ->assertJsonCount(1, 'data')
+                 ->assertJsonPath('data.0.title', 'Closed Task');
+    }
 }
