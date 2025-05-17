@@ -37,7 +37,7 @@ class TaskTest extends TestCase
                         ]);
 
         $response->assertStatus(201)
-            ->assertJsonStructure([['message','task']]);
+            ->assertJsonStructure(['message','task']);
     
         $this->assertDatabaseHas('tasks', [
             'title'=> 'Полить помидоры',
@@ -58,7 +58,7 @@ class TaskTest extends TestCase
                         ]);
 
         $response->assertStatus(200)
-            ->assertJsonStructure([['message','task']]);
+            ->assertJsonStructure(['message','task']);
         
             $this->assertDatabaseHas('tasks', [
                 'id' => $task->id,

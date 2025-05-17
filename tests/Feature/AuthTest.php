@@ -50,9 +50,7 @@ class AuthTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonStructure([['message','user','token']]);
-    
-            $this->assertDatabaseCount('personal_access_tokens', 0);
+            ->assertJsonStructure(['message','user','token']);
     }
 
     public function test_user_can_logout(): void
@@ -63,6 +61,19 @@ class AuthTest extends TestCase
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)->postJson('/api/logout');
     
         $response->assertStatus(200)
-            ->assertJsonStructure([['message' => 'Success logout']]);
+            ->assertJson(['message' => 'User logged out successfully']);
+        
+        $this->assertDatabaseMissing('personal_access_tokens', [
+            'tokenable_id' => $user->id,
+            'tokenable_type' => User::class,
+            'name' => 'test-token',
+        ]);
+    }
+
+    public function test_unauth_user_cant_logout(): void
+    {
+        $response = $this->postJson('/api/logout');
+    
+        $response->assertStatus(401);
     }
 }
